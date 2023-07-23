@@ -8,19 +8,19 @@ Braindump is a purposefully minimal text editor my nephew and I (at least) use t
 
 You open it and it starts a new file for the current day. You can go to the next day by pressing ctrl + shift + f or the last one with ctrl + shift + b. To go to the present day you can press ctrl + shift + p. You can press ctrl + shift + s to save. It stores its data on disk at a path you specify (see below for more). It stores files like this:
 
-➜ jg ~ cd Dropbox/Journal
-➜ jg Journal tree
-.
-├── 2022
-│   └── 07
-│       └── 22.txt
-├── 2023
-│   ├── 01
-│   │   └── 22.txt
-│   ├── 02
-│   │   └── 22.txt
-│   ├── 07
-│   │   ├── 08.txt
+  ➜ jg ~ cd Dropbox/Journal
+  ➜ jg Journal tree
+
+  ├── 2022
+  │   └── 07
+  │       └── 22.txt
+  ├── 2023
+  │    ├── 01
+  │   │   └── 22.txt
+  │   ├── 02
+  │   │   └── 22.txt
+  │   ├── 07
+  │   │   ├── 08.txt
 
 ## What it looks like
 
