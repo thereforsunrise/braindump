@@ -42,9 +42,9 @@ It works for me inasmuch it instilled in me a daily writing habit and gave me a 
 
 You can tell Braindump where to store files by creating a file "$HOME/.config/braindump.ini" with the path:
 
-➜ jg ~ cat .config/braindump.ini
-[Settings]
-file_storage_directory = /home/jg/Dropbox/Journal
+    ➜ jg ~ cat .config/braindump.ini
+    [Settings]
+    file_storage_directory = /home/jg/Dropbox/Journal
 
 ## Support
 
