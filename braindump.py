@@ -5,10 +5,10 @@ import sys
 import os
 
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTextEdit, QDateTimeEdit, QLabel, QFrame, QCalendarWidget
-from PyQt5.QtCore import Qt, QDate, QDateTime, QTime, QStandardPaths
+from PyQt5.QtCore import Qt, QDate, QDateTime, QTime, QStandardPaths, QTimer
 from PyQt5.QtGui import QFont, QFontDatabase, QKeyEvent, QTextCursor
 
-class BrowserStyleApp(QWidget):
+class BraindumpApp(QWidget):
     def __init__(self):
         super().__init__()
 
@@ -17,12 +17,18 @@ class BrowserStyleApp(QWidget):
         self.config = configparser.ConfigParser()
         self.config.read(self.config_file_path)
         self.file_storage_directory = self.config.get('Settings', 'file_storage_directory', fallback='default_directory')
+        self.file_storage_interval = self.config.get('Settings', 'file_storage_interval', fallback='30')
 
         self.init_ui()
 
     def init_ui(self):
         self.setWindowTitle('Braindump')
         self.setGeometry(100, 100, 800, 600)
+
+        self.timer = QTimer(self)
+        self.timer_interval = self.seconds_to_milliseconds(int(self.file_storage_interval))
+        self.timer.timeout.connect(self.save_file_for_date)
+        self.timer.start(self.timer_interval)
 
         layout = QVBoxLayout()
 
@@ -76,16 +82,6 @@ class BrowserStyleApp(QWidget):
 
         self.date_time_edit.dateTimeChanged.connect(self.load_file_for_date)
         layout.addWidget(self.date_time_edit)
-
-        self.file_saved_message = QLabel()
-        self.file_saved_message.setStyleSheet('''
-            QLabel {
-                font-size: 14px;
-                color: white;
-                margin-top: 10px;
-            }
-        ''')
-        layout.addWidget(self.file_saved_message)
         layout.addWidget(self.page_content_textedit)
 
         self.setLayout(layout)
@@ -141,16 +137,22 @@ class BrowserStyleApp(QWidget):
         font = QFont(font_family, font_size)
         return font
 
+    def seconds_to_milliseconds(self, seconds):
+        return seconds * 1000
+
     def keyPressEvent(self, event: QKeyEvent):
         modifiers = QApplication.keyboardModifiers()
         if modifiers == (Qt.ControlModifier | Qt.ShiftModifier):
             if event.key() == Qt.Key_B:
+                self.save_file_for_date()
                 self.goto_previous_date()
             elif event.key() == Qt.Key_F:
+                self.save_file_for_date()
                 self.goto_next_date()
             elif event.key() == Qt.Key_G:
                 self.show_calendar()
             elif event.key() == Qt.Key_P:
+                self.save_file_for_date()
                 self.goto_current_date()
             elif event.key() == Qt.Key_S:
                 self.save_file_for_date()
@@ -183,6 +185,13 @@ class BrowserStyleApp(QWidget):
         cursor.movePosition(QTextCursor.End)
         self.page_content_textedit.setTextCursor(cursor)
 
+    def save_file_for_date(self):
+        selected_date = self.date_time_edit.date()
+        filename = self.get_file_path(selected_date)
+        content = self.page_content_textedit.toPlainText()
+        with open(filename, 'w') as file:
+            file.write(content)
+
     def get_file_path(self, selected_date):
         year = selected_date.toString('yyyy')
         month = selected_date.toString('MM')
@@ -204,6 +213,6 @@ class BrowserStyleApp(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = BrowserStyleApp()
+    window = BraindumpApp()
     window.show()
     sys.exit(app.exec_())
