@@ -23,7 +23,6 @@ class BraindumpApp(QWidget):
 
     def init_ui(self):
         self.setWindowTitle('Braindump')
-        self.setGeometry(100, 100, 800, 600)
 
         self.timer = QTimer(self)
         self.timer_interval = self.seconds_to_milliseconds(int(self.file_storage_interval))
@@ -214,5 +213,6 @@ class BraindumpApp(QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = BraindumpApp()
-    window.show()
+    window.showFullScreen()  # Set the window to fullscreen mode
+
     sys.exit(app.exec_())
