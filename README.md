@@ -26,7 +26,7 @@ You open it and it starts a new file for the current day. You can go to the next
 
 A picture is worth a thousand words.
 
-!(screenshot.png)
+![](screenshot.png)
 
 ## How it works for me
 
