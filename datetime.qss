@@ -1,0 +1,15 @@
+QDateTimeEdit {
+    color: #f8f8f2; /* White text color */
+    background-color: #282a36; /* Dracula background color */
+    border: none;
+    margin-left: 400px;
+    margin-right: 400px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+QDateTimeEdit::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 0;
+}w
