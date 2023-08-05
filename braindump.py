@@ -34,7 +34,6 @@ class BraindumpApp(QWidget):
         self.page_content_textedit = QTextEdit()
         self.page_content_textedit.setAlignment(Qt.AlignCenter)
         self.page_content_textedit.setFont(self.get_monospace_font(16))
-        self.page_content_textedit.setStyleSheet(self.loadStylesheet('pagecontent.qss'))
         self.page_content_textedit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.page_content_textedit.textChanged.connect(self.hide_vertical_scrollbar)
 
@@ -42,7 +41,6 @@ class BraindumpApp(QWidget):
         self.date_time_edit.setDisplayFormat('ddd d MMMM yy')
         self.date_time_edit.setCalendarPopup(True)
         self.date_time_edit.setFont(self.get_monospace_font(16))
-        self.date_time_edit.setStyleSheet(self.loadStylesheet('datetime.qss'))
 
         today = QDate.currentDate()
         midnight = QTime(0, 0, 0)
@@ -54,20 +52,9 @@ class BraindumpApp(QWidget):
 
         self.setLayout(layout)
 
-        self.setStyleSheet(self.loadStylesheet('main.qss'))
-
         self.load_file_for_date(self.date_time_edit.dateTime())
 
         self.page_content_textedit.setFocus()
-
-        self.createContextMenu()
-
-    def loadStylesheet(self, filename):
-        style_file = QFile(filename)
-        if style_file.open(QFile.ReadOnly | QFile.Text):
-            stream = QTextStream(style_file)
-            stylesheet = stream.readAll()
-            return stylesheet
 
     def hide_vertical_scrollbar(self):
         self.page_content_textedit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -76,17 +63,6 @@ class BraindumpApp(QWidget):
         markdown_text = self.textEdit.toPlainText()
         html_text = markdown.markdown(markdown_text)
         self.webView.setHtml(html_text)
-
-    def contextMenuEvent(self, event):
-        menu = self.createStandardContextMenu()
-
-        menu.addAction(self.paste_plain_action)
-
-        menu.exec_(event.globalPos())
-
-    def pastePlainText(self):
-        clipboard = QApplication.clipboard()
-        self.setPlainText(clipboard.text())
 
     def get_monospace_font(self, font_size):
         font_id = QFontDatabase.addApplicationFont(":/fonts/Inconsolata-Regular.ttf")
@@ -173,40 +149,16 @@ class BraindumpApp(QWidget):
     def handle_calendar_selection(self, date):
         selected_date = date.toString("yyyy-MM-dd")
 
-    def createContextMenu(self):
-        context_menu = QMenu(self)
-
-        action_copy = QAction('Copy', self)
-        action_copy.triggered.connect(self.copyAction)
-        context_menu.addAction(action_copy)
-
-        action_cut = QAction('Cut', self)
-        action_cut.triggered.connect(self.cutAction)
-        context_menu.addAction(action_cut)
-
-        action_paste = QAction('Paste', self)
-        action_paste.triggered.connect(self.pasteAction)
-        context_menu.addAction(action_paste)
-
-        self.context_menu = context_menu
-
-    def showContextMenu(self, pos):
-        self.context_menu.setStyleSheet("color: white;")  # Set text color to white
-        self.context_menu.exec_(self.mapToGlobal(pos))
-
-    def copyAction(self):
-        self.label.setText('Copy action triggered')
-
-    def cutAction(self):
-        self.label.setText('Cut action triggered')
-
-    def pasteAction(self):
-        self.label.setText('Paste action triggered')
-
+def loadStylesheet(filename):
+    style_file = QFile(filename)
+    if style_file.open(QFile.ReadOnly | QFile.Text):
+        stream = QTextStream(style_file)
+        stylesheet = stream.readAll()
+        return stylesheet
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.setStyleSheet(loadStylesheet("braindump.qss"))
     window = BraindumpApp()
-    window.showFullScreen()  # Set the window to fullscreen mode
-
+    window.showFullScreen()
     sys.exit(app.exec_())
