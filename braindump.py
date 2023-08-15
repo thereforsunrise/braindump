@@ -3,8 +3,8 @@
 import os
 import sys
 
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTextEdit, QDateTimeEdit, QPlainTextEdit, QLabel, QFrame, QCalendarWidget, QMenu, QAction
-from PyQt5.QtCore import Qt, QDate, QDateTime, QTime, QStandardPaths, QTimer, QFile, QTextStream
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QTextEdit, QDateTimeEdit, QPlainTextEdit, QLabel, QFrame, QCalendarWidget, QMenu, QAction
+from PyQt5.QtCore import Qt, QDate, QDateTime, QTime, QStandardPaths, QTimer, QFile, QTextStream, QObject, QEvent
 from PyQt5.QtGui import QKeyEvent, QTextCursor
 
 from braindump_widget import BraindumpWidget

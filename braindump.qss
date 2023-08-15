@@ -40,7 +40,9 @@ QTextEdit {
 
 QMenu {
     color: white;
+    selection-background-color: #6495ED;
 }
+
 
 QScrollBar:vertical {
     width: 0;
