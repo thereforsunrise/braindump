@@ -13,6 +13,7 @@ from braindump_timer import BraindumpTimer
 from braindump_datetimeedit import BraindumpDateTimeEdit
 from braindump_config import BraindumpConfig
 
+
 class BraindumpApp(QWidget):
     def __init__(self):
         super().__init__()
@@ -88,7 +89,8 @@ class BraindumpApp(QWidget):
         self.date_time_edit.setDateTime(new_date)
 
     def goto_current_date(self):
-        self.date_time_edit.setDateTime(QDateTime(QDate.currentDate(), QTime(0, 0, 0)))
+        self.date_time_edit.setDateTime(
+            QDateTime(QDate.currentDate(), QTime(0, 0, 0)))
 
     def save_file_for_date(self):
         selected_date = self.date_time_edit.date()
@@ -101,13 +103,15 @@ class BraindumpApp(QWidget):
         year = selected_date.toString('yyyy')
         month = selected_date.toString('MM')
         day = selected_date.toString('dd')
-        directory = os.path.join(self.config.file_storage_directory, year, month)
+        directory = os.path.join(
+            self.config.file_storage_directory, year, month)
         filename = os.path.join(directory, day + '.txt')
         os.makedirs(directory, exist_ok=True)
         return filename
 
     def get_monospace_font(self, font_size):
-        font_id = QFontDatabase.addApplicationFont(":/fonts/Inconsolata-Regular.ttf")
+        font_id = QFontDatabase.addApplicationFont(
+            ":/fonts/Inconsolata-Regular.ttf")
 
         if font_id != -1:
             font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
@@ -117,12 +121,14 @@ class BraindumpApp(QWidget):
         font = QFont(font_family, font_size)
         return font
 
+
 def load_stylesheet(filename):
     style_file = QFile(filename)
     if style_file.open(QFile.ReadOnly | QFile.Text):
         stream = QTextStream(style_file)
         stylesheet = stream.readAll()
         return stylesheet
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

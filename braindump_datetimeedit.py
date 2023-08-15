@@ -3,6 +3,7 @@ from braindump_widget import BraindumpWidget
 from PyQt5.QtWidgets import QDateTimeEdit
 from PyQt5.QtCore import QDateTime, QTime, QDate
 
+
 class BraindumpDateTimeEdit(BraindumpWidget, QDateTimeEdit):
     def __init__(self):
         super().__init__()

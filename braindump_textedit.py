@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QTextEdit, QMenu, QAction
 
 from braindump_widget import BraindumpWidget
 
+
 class BraindumpTextEdit(BraindumpWidget, QTextEdit):
     def __init__(self):
         super().__init__()
@@ -16,8 +17,10 @@ class BraindumpTextEdit(BraindumpWidget, QTextEdit):
         self.textChanged.connect(self.hide_vertical_scrollbar)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.showContextMenu)
-        self.paste_no_formatting_action = QAction("Paste with No Formatting", self)
-        self.paste_no_formatting_action.triggered.connect(self.pasteNoFormatting)
+        self.paste_no_formatting_action = QAction(
+            "Paste with No Formatting", self)
+        self.paste_no_formatting_action.triggered.connect(
+            self.pasteNoFormatting)
         self.standard_context_menu = self.createStandardContextMenu()
 
     def pasteNoFormatting(self):
@@ -37,10 +40,14 @@ class BraindumpTextEdit(BraindumpWidget, QTextEdit):
     def createContextMenu(self):
         self.context_menu = QMenu(self)
 
-        self.context_menu.addActions(self.context_menu.actions() + QApplication.instance().allWidgets()[0].createStandardContextMenu().actions())
+        self.context_menu.addActions(
+            self.context_menu.actions() +
+            QApplication.instance().allWidgets()[0].createStandardContextMenu().actions())
 
-        paste_without_formatting_action = QAction("Paste Without Formatting", self)
-        paste_without_formatting_action.triggered.connect(self.pasteWithoutFormatting)
+        paste_without_formatting_action = QAction(
+            "Paste Without Formatting", self)
+        paste_without_formatting_action.triggered.connect(
+            self.pasteWithoutFormatting)
         context_menu.addAction(paste_without_formatting_action)
 
         return context_menu
