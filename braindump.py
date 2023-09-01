@@ -57,12 +57,6 @@ class BraindumpApp(QWidget):
             if event.key() == Qt.Key_B:
                 self.save_file_for_date()
                 self.goto_previous_date()
-            elif event.key() == Qt.Key_Left:
-                self.save_file_for_date()
-                self.goto_previous_date()
-            elif event.key() == Qt.Key_Right:
-                self.save_file_for_date()
-                self.goto_next_date()
             elif event.key() == Qt.Key_F:
                 self.save_file_for_date()
                 self.goto_next_date()
