@@ -8,8 +8,18 @@ Braindump is a purposefully minimal text editor my nephew and I (at least) use t
 
 You open it and it starts a new file for the current day. You can go to the next day by pressing ctrl + shift + f or the last one with ctrl + shift + b. To go to the present day you can press ctrl + shift + p. You can press ctrl + shift + s to save. It will also save every 30 seconds by default and/or when you move between days. It stores its data on disk at a path you specify (see below for more). It stores files like this:
 
-    ➜ jg ~ cd Dropbox/Journal
-    ➜ jg Journal tree
+    ➜ jg braindump (main) ✗ cat ~/.config/braindump.ini
+
+    ➜ jg Journals cd ~/Dropbox/Journals
+
+    ➜ jg Journals tree -L 1       
+    .
+    ├── Personal
+    └── Work
+
+    ➜ jg Personal cd ~/Dropbox/Journals/Personal
+
+    ➜ jg Personal tree
 
     ├── 2022
     │   └── 07
@@ -45,6 +55,6 @@ You can tell Braindump where to store files by creating a file "$HOME/.config/br
     ➜ jg ~ cat ~/.config/braindump.ini
     [Settings]
     # where to store files
-    file_storage_directory = /home/jg/Dropbox/Journal
+    notebooks_base_directory = /home/jg/Dropbox/Journals
     # save files after interval
-    file_storage_interval = 30
+    save_interval = 30

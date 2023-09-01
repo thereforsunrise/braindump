@@ -10,7 +10,7 @@ class BraindumpSelector(BraindumpWidget, QComboBox):
         super().__init__()
         self.setFont(self.get_monospace_font(16))
 
-        for directory in self.list_directories(config.file_storage_directory):
+        for directory in self.list_directories(config.notebooks_base_directory):
             self.addItem(directory)
 
     def list_directories(self, directory_path):

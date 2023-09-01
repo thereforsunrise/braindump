@@ -8,7 +8,7 @@ class BraindumpTimer(BraindumpWidget, QTimer):
         super().__init__()
 
         self.timer_interval = self.seconds_to_milliseconds(
-            int(config.file_storage_interval))
+            int(config.save_interval))
         self.start(self.timer_interval)
 
     def seconds_to_milliseconds(self, seconds):

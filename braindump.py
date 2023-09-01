@@ -38,7 +38,7 @@ class BraindumpApp(QWidget):
         self.selector.currentIndexChanged.connect(self.load_journal)
 
         self.current_directory = os.path.join(
-            self.config.file_storage_directory, self.selector.currentText())
+            self.config.notebooks_base_directory, self.selector.currentText())
 
         self.load_file_for_date(self.date_time_edit.dateTime())
 
@@ -76,7 +76,7 @@ class BraindumpApp(QWidget):
     def load_journal(self):
         self.save_file_for_date()
         self.current_directory = os.path.join(
-            self.config.file_storage_directory, self.selector.currentText())
+            self.config.notebooks_base_directory, self.selector.currentText())
 
         self.load_file_for_date(self.date_time_edit.dateTime())
 
