@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import os
+from os import path
+
 import sys
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QTextEdit, QDateTimeEdit, QPlainTextEdit, QLabel, QFrame, QCalendarWidget, QMenu, QAction
@@ -121,6 +123,15 @@ class BraindumpApp(QWidget):
         font = QFont(font_family, font_size)
         return font
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
 
 def load_stylesheet(filename):
     style_file = QFile(filename)
@@ -132,7 +143,9 @@ def load_stylesheet(filename):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    app.setStyleSheet(load_stylesheet("braindump.qss"))
+    stylesheet_path = resource_path('styles/braindump.qss')
+    print(stylesheet_path)
+    app.setStyleSheet(load_stylesheet(stylesheet_path))
     window = BraindumpApp()
     window.showFullScreen()
     sys.exit(app.exec_())
