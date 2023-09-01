@@ -57,6 +57,12 @@ class BraindumpApp(QWidget):
             if event.key() == Qt.Key_B:
                 self.save_file_for_date()
                 self.goto_previous_date()
+            elif event.key() == Qt.Key_Left:
+                self.save_file_for_date()
+                self.goto_previous_date()
+            elif event.key() == Qt.Key_Right:
+                self.save_file_for_date()
+                self.goto_next_date()
             elif event.key() == Qt.Key_F:
                 self.save_file_for_date()
                 self.goto_next_date()
@@ -74,6 +80,7 @@ class BraindumpApp(QWidget):
             file.write(content)
 
     def load_journal(self):
+        self.save_file_for_date()
         self.current_directory = os.path.join(
             self.config.file_storage_directory, self.selector.currentText())
 
