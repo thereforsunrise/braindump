@@ -14,6 +14,7 @@ from braindump_textedit import BraindumpTextEdit
 from braindump_timer import BraindumpTimer
 from braindump_datetimeedit import BraindumpDateTimeEdit
 from braindump_config import BraindumpConfig
+from braindump_selector import BraindumpSelector
 
 
 class BraindumpApp(QWidget):
@@ -30,14 +31,21 @@ class BraindumpApp(QWidget):
         self.page_content_textedit = BraindumpTextEdit()
         self.date_time_edit = BraindumpDateTimeEdit()
         self.timer = BraindumpTimer(self.config)
+        self.selector = BraindumpSelector(self.config)
 
         self.timer.timeout.connect(self.save_file_for_date)
         self.date_time_edit.dateTimeChanged.connect(self.load_file_for_date)
+        self.selector.currentIndexChanged.connect(self.load_journal)
+
+        self.current_directory = os.path.join(
+            self.config.file_storage_directory, self.selector.currentText())
 
         self.load_file_for_date(self.date_time_edit.dateTime())
 
         layout = QVBoxLayout()
         self.setLayout(layout)
+
+        layout.addWidget(self.selector)
         layout.addWidget(self.date_time_edit)
         layout.addWidget(self.page_content_textedit)
 
@@ -64,6 +72,12 @@ class BraindumpApp(QWidget):
         content = self.page_content_textedit.toPlainText()
         with open(filename, 'w') as file:
             file.write(content)
+
+    def load_journal(self):
+        self.current_directory = os.path.join(
+            self.config.file_storage_directory, self.selector.currentText())
+
+        self.load_file_for_date(self.date_time_edit.dateTime())
 
     def load_file_for_date(self, selected_datetime):
         selected_date = selected_datetime.date()
@@ -106,7 +120,7 @@ class BraindumpApp(QWidget):
         month = selected_date.toString('MM')
         day = selected_date.toString('dd')
         directory = os.path.join(
-            self.config.file_storage_directory, year, month)
+            self.current_directory, year, month)
         filename = os.path.join(directory, day + '.txt')
         os.makedirs(directory, exist_ok=True)
         return filename
@@ -123,6 +137,7 @@ class BraindumpApp(QWidget):
         font = QFont(font_family, font_size)
         return font
 
+
 def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS
@@ -130,7 +145,6 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
-
 
 
 def load_stylesheet(filename):
@@ -144,7 +158,6 @@ def load_stylesheet(filename):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     stylesheet_path = resource_path('styles/braindump.qss')
-    print(stylesheet_path)
     app.setStyleSheet(load_stylesheet(stylesheet_path))
     window = BraindumpApp()
     window.showFullScreen()

@@ -2,31 +2,6 @@ QWidget {
     background-color: #282a36;
 }
 
-QLineEdit {
-    font-size: 14px;
-    padding: 5px;
-    background-color: #282a36;
-    color: #f8f8f2;
-    border: 1px solid #44475a;
-    border-radius: 5px;
-}
-
-QPushButton {
-    background-color: #bd93f9;
-    color: #282a36;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-QPushButton:hover {
-    background-color: #6d77b3;
-}
-
-QLabel {
-    color: #f8f8f2;
-}
 
 QTextEdit {
     background-color: #282a36;
@@ -43,7 +18,6 @@ QMenu {
     selection-background-color: #6495ED;
 }
 
-
 QScrollBar:vertical {
     width: 0;
 }
@@ -56,6 +30,20 @@ QDateTimeEdit {
     margin-right: 400px;
     border-radius: 5px;
     padding: 10px;
+}
+
+QComboBox {
+    color: #f8f8f2;
+    background-color: #282a36;
+    border: none;
+    margin-left: 400px;
+    margin-right: 400px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+QComboBox::drop-down {
+    width: 0;       /* Hide the dropdown arrow */
 }
 
 QDateTimeEdit::drop-down {
