@@ -65,6 +65,16 @@ class BraindumpApp(QWidget):
                 self.goto_current_date()
             elif event.key() == Qt.Key_S:
                 self.save_file_for_date()
+            elif event.key() == Qt.Key_G:
+                current_index = self.selector.currentIndex() - 1
+                new_index = max(current_index, self.selector.min_index - 1)
+                self.selector.setCurrentIndex(new_index)
+                self.load_journal()
+            elif event.key() == Qt.Key_H:
+                current_index = self.selector.currentIndex() + 1
+                new_index = min(current_index, self.selector.max_index - 1)
+                self.selector.setCurrentIndex(new_index)
+                self.load_journal()
 
     def save_file_for_date(self):
         selected_date = self.date_time_edit.date()
@@ -77,7 +87,6 @@ class BraindumpApp(QWidget):
         self.save_file_for_date()
         self.current_directory = os.path.join(
             self.config.notebooks_base_directory, self.selector.currentText())
-
         self.load_file_for_date(self.date_time_edit.dateTime())
 
     def load_file_for_date(self, selected_datetime):

@@ -13,6 +13,9 @@ class BraindumpSelector(BraindumpWidget, QComboBox):
         for directory in self.list_directories(config.notebooks_base_directory):
             self.addItem(directory)
 
+        self.min_index = 1
+        self.max_index = self.count()
+
     def list_directories(self, directory_path):
         directories = [
             d for d in os.listdir(directory_path) if os.path.isdir(
