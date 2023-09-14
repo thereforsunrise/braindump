@@ -5,9 +5,9 @@ from os import path
 
 import sys
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QTextEdit, QDateTimeEdit, QPlainTextEdit, QLabel, QFrame, QCalendarWidget, QMenu, QAction
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QDateTimeEdit, QPlainTextEdit, QLabel, QFrame, QCalendarWidget, QMenu, QAction
 from PyQt5.QtCore import Qt, QDate, QDateTime, QTime, QStandardPaths, QTimer, QFile, QTextStream, QObject, QEvent
-from PyQt5.QtGui import QKeyEvent, QTextCursor
+from PyQt5.QtGui import QKeyEvent, QTextCursor, QScreen, QTextBlockFormat
 
 from braindump_widget import BraindumpWidget
 from braindump_textedit import BraindumpTextEdit
@@ -42,12 +42,27 @@ class BraindumpApp(QWidget):
 
         self.load_file_for_date(self.date_time_edit.dateTime())
 
+        primary_screen = QApplication.primaryScreen()
+        screen_geometry = primary_screen.geometry()
+
+        desired_width_percentage = 40
+        desired_width = int(screen_geometry.width() * desired_width_percentage / 100)
+
         layout = QVBoxLayout()
         self.setLayout(layout)
 
         layout.addWidget(self.selector)
+        layout.setAlignment(self.selector, Qt.AlignHCenter)
+
         layout.addWidget(self.date_time_edit)
+        layout.setAlignment(self.date_time_edit, Qt.AlignHCenter)
+
         layout.addWidget(self.page_content_textedit)
+        layout.setAlignment(self.page_content_textedit, Qt.AlignHCenter)
+
+        self.selector.setFixedWidth(desired_width)
+        self.date_time_edit.setFixedWidth(desired_width)
+        self.page_content_textedit.setFixedWidth(desired_width)
 
         self.page_content_textedit.setFocus()
 

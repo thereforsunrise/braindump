@@ -7,8 +7,6 @@ QTextEdit {
     background-color: #282a36;
     color: #f8f8f2;
     border: none;
-    margin-left: 400px;
-    margin-right: 400px;
     border-radius: 5px;
     padding: 10px;
 }
@@ -26,8 +24,6 @@ QDateTimeEdit {
     color: #f8f8f2; /* White text color */
     background-color: #282a36; /* Dracula background color */
     border: none;
-    margin-left: 400px;
-    margin-right: 400px;
     border-radius: 5px;
     padding: 10px;
 }
@@ -36,8 +32,6 @@ QComboBox {
     color: #f8f8f2;
     background-color: #282a36;
     border: none;
-    margin-left: 400px;
-    margin-right: 400px;
     border-radius: 5px;
     padding: 10px;
 }

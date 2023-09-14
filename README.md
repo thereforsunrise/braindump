@@ -6,7 +6,9 @@ Braindump is a purposefully minimal text editor my nephew and I (at least) use t
 
 ## Overview
 
-You open it and it starts a new file for the current day. You can go to the next day by pressing ctrl + shift + f or the last one with ctrl + shift + b. To go to the present day you can press ctrl + shift + p. You can press ctrl + shift + s to save. It will also save every 30 seconds by default and/or when you move between days. It stores its data on disk at a path you specify (see below for more). It stores files like this:
+You open it and it starts a new file for the current day. You can go to the next day by pressing ctrl + shift + f or the last one with ctrl + shift + b. To go to the present day you can press ctrl + shift + p. You can press ctrl + shift + s to save. It has a concept of multiple notebooks which you can switch between with ctrl + shift + g and ctrl + shift + n.
+
+It will also save every 30 seconds by default and/or when you move between days. It stores its data on disk at a path you specify (see below for more). It stores files like this:
 
     ➜ jg braindump (main) ✗ cat ~/.config/braindump.ini
 
