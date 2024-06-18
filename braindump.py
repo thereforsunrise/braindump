@@ -1,189 +1,122 @@
-#!/usr/bin/env python3
-
-import os
-from os import path
-
+import logging
 import sys
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QDateTimeEdit, QPlainTextEdit, QLabel, QFrame, QCalendarWidget, QMenu, QAction
-from PyQt5.QtCore import Qt, QDate, QDateTime, QTime, QStandardPaths, QTimer, QFile, QTextStream, QObject, QEvent
-from PyQt5.QtGui import QKeyEvent, QTextCursor, QScreen, QTextBlockFormat
+from PyQt5.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QVBoxLayout,
+    QWidget,
+    QHBoxLayout,
+    QSpacerItem,
+    QSizePolicy,
+)
+from PyQt5.QtCore import Qt, QTimer, QThread
+from PyQt5.QtGui import QFont
 
-from braindump_widget import BraindumpWidget
-from braindump_textedit import BraindumpTextEdit
-from braindump_timer import BraindumpTimer
-from braindump_datetimeedit import BraindumpDateTimeEdit
+from datetime import datetime
+
 from braindump_config import BraindumpConfig
-from braindump_selector import BraindumpSelector
+from braindump_database import BraindumpDatabase
+from braindump_email_worker import BraindumpEmailWorker
+from braindump_plain_text_editor import BraindumpPlainTextEditor
 
 
-class BraindumpApp(QWidget):
+class Braindump(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.initUI()
+
         self.config = BraindumpConfig()
+        self.database = BraindumpDatabase(self.config.db_file)
 
-        self.init_ui()
+        self.email_worker = BraindumpEmailWorker(self.config.config)
+        self.email_thread = QThread()
+        self.email_worker.moveToThread(self.email_thread)
 
-    def init_ui(self):
-        self.setWindowTitle('Braindump')
+        self.email_worker.send_error.connect(self.handle_send_error)
+        self.email_worker.emails_sent.connect(self.handle_emails_sent)
 
-        self.page_content_textedit = BraindumpTextEdit()
-        self.date_time_edit = BraindumpDateTimeEdit()
-        self.timer = BraindumpTimer(self.config)
-        self.selector = BraindumpSelector(self.config)
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.start_email_thread)
+        self.timer.start(60000)
 
-        self.timer.timeout.connect(self.save_file_for_date)
-        self.date_time_edit.dateTimeChanged.connect(self.load_file_for_date)
-        self.selector.currentIndexChanged.connect(self.load_journal)
+        self.email_thread.start()
 
-        self.current_directory = os.path.join(
-            self.config.notebooks_base_directory, self.selector.currentText())
+    def start_email_thread(self):
+        if not self.email_thread.isRunning():
+            self.email_thread.start()
+        self.email_worker.send_emails(self.database.get_unsent_notes())
 
-        self.load_file_for_date(self.date_time_edit.dateTime())
+    def initUI(self):
+        self.setWindowTitle("Braindump")
 
-        primary_screen = QApplication.primaryScreen()
-        screen_geometry = primary_screen.geometry()
-
-        desired_width_percentage = 40
-        desired_width = int(screen_geometry.width() * desired_width_percentage / 100)
+        self.textEdit = BraindumpPlainTextEditor(self)
+        self.textEdit.setFont(QFont("Monospace", 24))
+        self.textEdit.setStyleSheet(
+            "QTextEdit { color: white; background-color: black; padding: 20px; }"
+        )
+        self.textEdit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.textEdit.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         layout = QVBoxLayout()
-        self.setLayout(layout)
+        layout.addWidget(self.textEdit)
 
-        layout.addWidget(self.selector)
-        layout.setAlignment(self.selector, Qt.AlignHCenter)
+        centralWidget = QWidget(self)
+        centralWidget.setLayout(layout)
+        centralWidget.setStyleSheet("background-color: black;")
 
-        layout.addWidget(self.date_time_edit)
-        layout.setAlignment(self.date_time_edit, Qt.AlignHCenter)
+        hLayout = QHBoxLayout()
+        hLayout.addSpacerItem(
+            QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        )
+        hLayout.addWidget(centralWidget)
+        hLayout.addSpacerItem(
+            QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        )
 
-        layout.addWidget(self.page_content_textedit)
-        layout.setAlignment(self.page_content_textedit, Qt.AlignHCenter)
+        mainWidget = QWidget(self)
+        mainWidget.setLayout(hLayout)
+        mainWidget.setStyleSheet("background-color: black;")
+        self.setCentralWidget(mainWidget)
 
-        self.selector.setFixedWidth(desired_width)
-        self.date_time_edit.setFixedWidth(desired_width)
-        self.page_content_textedit.setFixedWidth(desired_width)
+        self.showFullScreen()
 
-        self.page_content_textedit.setFocus()
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_S and (event.modifiers() & Qt.ControlModifier):
+            self.save_note()
 
-    def keyPressEvent(self, event: QKeyEvent):
-        modifiers = QApplication.keyboardModifiers()
-        if modifiers == (Qt.ControlModifier | Qt.ShiftModifier):
-            if event.key() == Qt.Key_B:
-                self.save_file_for_date()
-                self.goto_previous_date()
-            elif event.key() == Qt.Key_F:
-                self.save_file_for_date()
-                self.goto_next_date()
-            elif event.key() == Qt.Key_P:
-                self.save_file_for_date()
-                self.goto_current_date()
-            elif event.key() == Qt.Key_S:
-                self.save_file_for_date()
-            elif event.key() == Qt.Key_G:
-                current_index = self.selector.currentIndex() - 1
-                new_index = max(current_index, self.selector.min_index - 1)
-                self.selector.setCurrentIndex(new_index)
-                self.load_journal()
-            elif event.key() == Qt.Key_H:
-                current_index = self.selector.currentIndex() + 1
-                new_index = min(current_index, self.selector.max_index - 1)
-                self.selector.setCurrentIndex(new_index)
-                self.load_journal()
+    def save_note(self):
+        body = self.textEdit.toPlainText()
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.database.add_note(body, timestamp)
+        self.textEdit.clear()
 
-    def save_file_for_date(self):
-        selected_date = self.date_time_edit.date()
-        filename = self.get_file_path(selected_date)
-        content = self.page_content_textedit.toPlainText()
-        with open(filename, 'w') as file:
-            file.write(content)
+    def handle_send_error(self, error_message, note_ids):
+        note_ids_str = ",".join(str(note_id) for note_id in note_ids)
 
-    def load_journal(self):
-        self.save_file_for_date()
-        self.current_directory = os.path.join(
-            self.config.notebooks_base_directory, self.selector.currentText())
-        self.load_file_for_date(self.date_time_edit.dateTime())
+        logging.info(f"Problem sending notes {error_message}: {note_ids_str}")
 
-    def load_file_for_date(self, selected_datetime):
-        selected_date = selected_datetime.date()
-        filename = self.get_file_path(selected_date)
-        try:
-            with open(filename, 'r') as file:
-                content = file.read()
-            self.page_content_textedit.setPlainText(content)
-        except FileNotFoundError:
-            self.page_content_textedit.setPlainText("")
-            self.save_file_for_date()
+    def handle_emails_sent(self, note_ids):
+        self.database.mark_notes_as_sent(note_ids)
 
-        cursor = self.page_content_textedit.textCursor()
-        cursor.movePosition(QTextCursor.End)
-        self.page_content_textedit.setTextCursor(cursor)
+        note_ids_str = ",".join(str(note_id) for note_id in note_ids)
+        logging.info(f"Notes sent sucessfully: {note_ids_str}")
 
-    def goto_previous_date(self):
-        current_date = self.date_time_edit.dateTime()
-        new_date = current_date.addDays(-1)
-        self.date_time_edit.setDateTime(new_date)
-
-    def goto_next_date(self):
-        current_date = self.date_time_edit.dateTime()
-        new_date = current_date.addDays(1)
-        self.date_time_edit.setDateTime(new_date)
-
-    def goto_current_date(self):
-        self.date_time_edit.setDateTime(
-            QDateTime(QDate.currentDate(), QTime(0, 0, 0)))
-
-    def save_file_for_date(self):
-        selected_date = self.date_time_edit.date()
-        filename = self.get_file_path(selected_date)
-        content = self.page_content_textedit.toPlainText()
-        with open(filename, 'w') as file:
-            file.write(content)
-
-    def get_file_path(self, selected_date):
-        year = selected_date.toString('yyyy')
-        month = selected_date.toString('MM')
-        day = selected_date.toString('dd')
-        directory = os.path.join(
-            self.current_directory, year, month)
-        filename = os.path.join(directory, day + '.txt')
-        os.makedirs(directory, exist_ok=True)
-        return filename
-
-    def get_monospace_font(self, font_size):
-        font_id = QFontDatabase.addApplicationFont(
-            ":/fonts/Inconsolata-Regular.ttf")
-
-        if font_id != -1:
-            font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
-        else:
-            font_family = "monospace"
-
-        font = QFont(font_family, font_size)
-        return font
+    def closeEvent(self, event):
+        self.email_thread.quit()
+        self.email_thread.wait()
+        event.accept()
 
 
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
-
-
-def load_stylesheet(filename):
-    style_file = QFile(filename)
-    if style_file.open(QFile.ReadOnly | QFile.Text):
-        stream = QTextStream(style_file)
-        stylesheet = stream.readAll()
-        return stylesheet
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
-    stylesheet_path = resource_path('styles/braindump.qss')
-    app.setStyleSheet(load_stylesheet(stylesheet_path))
-    window = BraindumpApp()
-    window.showFullScreen()
+    app.setStyleSheet("QMainWindow { background-color: black; }")
+    braindump = Braindump()
+    logging.basicConfig(
+        filename=braindump.config.log_file,
+        filemode="a",
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        level=logging.DEBUG,
+    )
     sys.exit(app.exec_())
