@@ -9,16 +9,15 @@ class BraindumpConfig:
     @staticmethod
     def config_dir():
         return os.path.join(os.environ["HOME"], ".braindump")
-    
+
     @staticmethod
     def config_file():
         return os.path.join(BraindumpConfig.config_dir(), "braindump.ini")
-    
+
     @staticmethod
     def log_file():
         return os.path.join(BraindumpConfig.config_dir(), "braindump.log")
 
-    
     @staticmethod
     def db_file():
         return os.path.join(BraindumpConfig.config_dir(), "braindump.db")
@@ -27,7 +26,7 @@ class BraindumpConfig:
     def load_config():
         if not QDir(BraindumpConfig.config_dir()).exists():
             QDir().mkpath(BraindumpConfig.config_dir())
-    
+
         config = configparser.ConfigParser()
 
         if not os.path.exists(BraindumpConfig.config_file()):
@@ -47,7 +46,8 @@ class BraindumpConfig:
             QMessageBox.information(
                 None,
                 "Configuration Created",
-                f"The configuration file has been created at: {BraindumpConfig.config_file()}",
+                f"The configuration file has been created at: {
+                    BraindumpConfig.config_file()}",
             )
 
         config.read(BraindumpConfig.config_file())

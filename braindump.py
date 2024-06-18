@@ -106,7 +106,8 @@ class Braindump(QMainWindow):
         note_ids_str = ",".join(str(note_id) for note_id in note_ids)
 
         if note_ids_str:
-            logging.info(f"Problem sending notes {error_message}: {note_ids_str}")
+            logging.info(f"Problem sending notes {
+                         error_message}: {note_ids_str}")
 
     def handle_emails_sent(self, note_ids):
         self.database.mark_notes_as_sent(note_ids)
@@ -124,9 +125,9 @@ class Braindump(QMainWindow):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Braindump CLI")
     parser.add_argument(
-        '--log-level', 
-        type=str, 
-        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], 
+        '--log-level',
+        type=str,
+        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
         default='INFO',
         help='Set the logging level'
     )

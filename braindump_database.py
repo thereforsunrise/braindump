@@ -25,7 +25,8 @@ class BraindumpDatabase:
         return self.cursor.lastrowid
 
     def get_unsent_notes(self):
-        self.cursor.execute("SELECT id, body, timestamp FROM notes WHERE sent = 0")
+        self.cursor.execute(
+            "SELECT id, body, timestamp FROM notes WHERE sent = 0")
         return self.cursor.fetchall()
 
     def mark_notes_as_sent(self, note_ids):
