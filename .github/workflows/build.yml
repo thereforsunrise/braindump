@@ -38,7 +38,10 @@ jobs:
         include:
           - os: ubuntu-latest
             TARGET: ubuntu
-            CMD_BUILD: pyinstaller -F -w -n braindump -i icon.png braindump.py
+            CMD_BUILD: >
+              pyinstaller -F -w -n braindump -i icon.png braindump.py
+              cd dist/ &&
+              zip -r9 braindump braindump
             OUT_FILE_NAME: braindump.zip
             ASSET_MIME: application/zip
           - os: macos-latest
