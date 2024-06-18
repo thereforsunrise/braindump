@@ -28,6 +28,7 @@ class BraindumpConfig:
                 "smtp_ssl": "false",
                 "username": "your_username",
                 "password": "your_password",
+                "interval": "30000"
             }
             with open(self.config_file, "w") as configfile:
                 self.config.write(configfile)

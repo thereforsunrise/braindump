@@ -23,6 +23,8 @@ from braindump_plain_text_editor import BraindumpPlainTextEditor
 
 class Braindump(QMainWindow):
     def __init__(self):
+        logging.debug(f"Braindump started")
+
         super().__init__()
 
         self.initUI()
@@ -39,11 +41,16 @@ class Braindump(QMainWindow):
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.start_email_thread)
-        self.timer.start(60000)
+
+        interval = self.config.getint("Email", "interval", 30000)
+        logging.debug(f"Email interval set to {interval}")
+        self.timer.start(interval)
 
         self.email_thread.start()
 
     def start_email_thread(self):
+        logging.debug(f"Started email thread")
+
         if not self.email_thread.isRunning():
             self.email_thread.start()
         self.email_worker.send_emails(self.database.get_unsent_notes())
@@ -95,13 +102,15 @@ class Braindump(QMainWindow):
     def handle_send_error(self, error_message, note_ids):
         note_ids_str = ",".join(str(note_id) for note_id in note_ids)
 
-        logging.info(f"Problem sending notes {error_message}: {note_ids_str}")
+        if note_ids_str:
+            logging.info(f"Problem sending notes {error_message}: {note_ids_str}")
 
     def handle_emails_sent(self, note_ids):
         self.database.mark_notes_as_sent(note_ids)
 
         note_ids_str = ",".join(str(note_id) for note_id in note_ids)
-        logging.info(f"Notes sent sucessfully: {note_ids_str}")
+        if note_ids_str:
+            logging.info(f"Notes sent sucessfully: {note_ids_str}")
 
     def closeEvent(self, event):
         self.email_thread.quit()
