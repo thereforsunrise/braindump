@@ -29,9 +29,10 @@ class Braindump(QMainWindow):
 
         super().__init__()
 
+        self.config = BraindumpConfig.load_config()
+
         self.initUI()
 
-        self.config = BraindumpConfig.load_config()
         self.database = BraindumpDatabase(BraindumpConfig.db_file())
 
         self.email_worker = BraindumpEmailWorker(self.config)
@@ -61,7 +62,11 @@ class Braindump(QMainWindow):
         self.setWindowTitle("Braindump")
 
         self.textEdit = BraindumpPlainTextEditor(self)
-        self.textEdit.setFont(QFont("Monospace", 24))
+
+        font_family = self.config.get('Interface', 'font_family', fallback='Monospace')
+        font_size = self.config.get('Interface', 'font_size', fallback=24)
+
+        self.textEdit.setFont(QFont(font_family, font_size))
         self.textEdit.setStyleSheet(
             "QTextEdit { color: white; background-color: #282a36; border: 0px; padding: 20px; }"
         )
@@ -76,13 +81,9 @@ class Braindump(QMainWindow):
         centralWidget.setStyleSheet("background-color: #282a36;")
 
         hLayout = QHBoxLayout()
-        hLayout.addSpacerItem(
-            QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        )
-        hLayout.addWidget(centralWidget)
-        hLayout.addSpacerItem(
-            QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        )
+        hLayout.addStretch(1)
+        hLayout.addWidget(centralWidget, 2)
+        hLayout.addStretch(1)
 
         mainWidget = QWidget(self)
         mainWidget.setLayout(hLayout)
