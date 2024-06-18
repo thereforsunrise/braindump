@@ -1,6 +1,7 @@
 import argparse
 import logging
 import sys
+import signal
 
 from PyQt5.QtWidgets import (
     QApplication,
@@ -120,6 +121,10 @@ class Braindump(QMainWindow):
         self.email_thread.wait()
         event.accept()
 
+def signal_handler(sig, frame):
+    logging.info("Exiting gracefully...")
+    QApplication.quit()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Braindump CLI")
@@ -140,6 +145,9 @@ if __name__ == "__main__":
         format="%(asctime)s - %(levelname)s - %(message)s",
         level=getattr(logging, args.log_level),
     )
+
+    signal.signal(signal.SIGINT, signal_handler)
+
     braindump = Braindump()
 
     sys.exit(app.exec_())
