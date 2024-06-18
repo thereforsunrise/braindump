@@ -1,5 +1,6 @@
 configparser==7.0.0
-PyQt5==5.15.10
+pillow
+pyinstaller
 PyQt5-Qt5==5.15.14
 PyQt5-sip==12.13.0
-pyinstaller
+PyQt5==5.15.10
