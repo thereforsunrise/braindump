@@ -6,20 +6,32 @@ from PyQt5.QtWidgets import QMessageBox
 
 
 class BraindumpConfig:
-    def __init__(self):
-        config_dir = os.path.join(os.environ["HOME"], ".braindump")
+    @staticmethod
+    def config_dir():
+        return os.path.join(os.environ["HOME"], ".braindump")
+    
+    @staticmethod
+    def config_file():
+        return os.path.join(BraindumpConfig.config_dir(), "braindump.ini")
+    
+    @staticmethod
+    def log_file():
+        return os.path.join(BraindumpConfig.config_dir(), "braindump.log")
 
-        if not QDir(config_dir).exists():
-            QDir().mkpath(config_dir)
+    
+    @staticmethod
+    def db_file():
+        return os.path.join(BraindumpConfig.config_dir(), "braindump.db")
 
-        self.config_file = os.path.join(config_dir, "braindump.ini")
-        self.log_file = os.path.join(config_dir, "braindump.log")
-        self.db_file = os.path.join(config_dir, "braindump.db")
+    @staticmethod
+    def load_config():
+        if not QDir(BraindumpConfig.config_dir()).exists():
+            QDir().mkpath(BraindumpConfig.config_dir())
+    
+        config = configparser.ConfigParser()
 
-        self.config = configparser.ConfigParser()
-
-        if not os.path.exists(self.config_file):
-            self.config["Email"] = {
+        if not os.path.exists(BraindumpConfig.config_file()):
+            config["Email"] = {
                 "sender_email": "your_email@example.com",
                 "receiver_email": "receiver_email@example.com",
                 "smtp_server": "smtp.example.com",
@@ -30,12 +42,14 @@ class BraindumpConfig:
                 "password": "your_password",
                 "interval": "30000"
             }
-            with open(self.config_file, "w") as configfile:
-                self.config.write(configfile)
+            with open(BraindumpConfig.config_file(), "w") as configfile:
+                config.write(configfile)
             QMessageBox.information(
                 None,
                 "Configuration Created",
-                f"The configuration file has been created at: {self.config_file}",
+                f"The configuration file has been created at: {BraindumpConfig.config_file()}",
             )
 
-        self.config.read(self.config_file)
+        config.read(BraindumpConfig.config_file())
+
+        return config

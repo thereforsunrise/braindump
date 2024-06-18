@@ -1,4 +1,6 @@
+import argparse
 import logging
+import os
 import sys
 
 from PyQt5.QtWidgets import (
@@ -23,16 +25,16 @@ from braindump_plain_text_editor import BraindumpPlainTextEditor
 
 class Braindump(QMainWindow):
     def __init__(self):
-        logging.debug(f"Braindump started")
+        logging.info(f"Braindump started")
 
         super().__init__()
 
         self.initUI()
 
-        self.config = BraindumpConfig()
-        self.database = BraindumpDatabase(self.config.db_file)
+        self.config = BraindumpConfig.load_config()
+        self.database = BraindumpDatabase(BraindumpConfig.db_file())
 
-        self.email_worker = BraindumpEmailWorker(self.config.config)
+        self.email_worker = BraindumpEmailWorker(self.config)
         self.email_thread = QThread()
         self.email_worker.moveToThread(self.email_thread)
 
@@ -42,8 +44,8 @@ class Braindump(QMainWindow):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.start_email_thread)
 
-        interval = self.config.getint("Email", "interval", 30000)
-        logging.debug(f"Email interval set to {interval}")
+        interval = self.config.getint("Email", "interval", fallback=30000)
+        logging.info(f"Email interval set to {interval}")
         self.timer.start(interval)
 
         self.email_thread.start()
@@ -61,7 +63,7 @@ class Braindump(QMainWindow):
         self.textEdit = BraindumpPlainTextEditor(self)
         self.textEdit.setFont(QFont("Monospace", 24))
         self.textEdit.setStyleSheet(
-            "QTextEdit { color: white; background-color: black; padding: 20px; }"
+            "QTextEdit { color: white; background-color: #282a36; border: 0px; padding: 20px; }"
         )
         self.textEdit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.textEdit.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -71,7 +73,7 @@ class Braindump(QMainWindow):
 
         centralWidget = QWidget(self)
         centralWidget.setLayout(layout)
-        centralWidget.setStyleSheet("background-color: black;")
+        centralWidget.setStyleSheet("background-color: #282a36;")
 
         hLayout = QHBoxLayout()
         hLayout.addSpacerItem(
@@ -84,7 +86,7 @@ class Braindump(QMainWindow):
 
         mainWidget = QWidget(self)
         mainWidget.setLayout(hLayout)
-        mainWidget.setStyleSheet("background-color: black;")
+        mainWidget.setStyleSheet("background-color: #282a36;")
         self.setCentralWidget(mainWidget)
 
         self.showFullScreen()
@@ -96,7 +98,8 @@ class Braindump(QMainWindow):
     def save_note(self):
         body = self.textEdit.toPlainText()
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.database.add_note(body, timestamp)
+        note_id = self.database.add_note(body, timestamp)
+        logging.info(f"Saved note with id {note_id}")
         self.textEdit.clear()
 
     def handle_send_error(self, error_message, note_ids):
@@ -119,13 +122,24 @@ class Braindump(QMainWindow):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Braindump CLI")
+    parser.add_argument(
+        '--log-level', 
+        type=str, 
+        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], 
+        default='INFO',
+        help='Set the logging level'
+    )
+    args = parser.parse_args()
+
     app = QApplication(sys.argv)
-    app.setStyleSheet("QMainWindow { background-color: black; }")
-    braindump = Braindump()
+    app.setStyleSheet("QMainWindow { background-color: #282a36; }")
     logging.basicConfig(
-        filename=braindump.config.log_file,
+        filename=BraindumpConfig.log_file(),
         filemode="a",
         format="%(asctime)s - %(levelname)s - %(message)s",
-        level=logging.DEBUG,
+        level=getattr(logging, args.log_level),
     )
+    braindump = Braindump()
+
     sys.exit(app.exec_())

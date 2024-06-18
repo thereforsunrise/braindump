@@ -22,6 +22,7 @@ class BraindumpDatabase:
             "INSERT INTO notes (body, timestamp) VALUES (?, ?)", (body, timestamp)
         )
         self.conn.commit()
+        return self.cursor.lastrowid
 
     def get_unsent_notes(self):
         self.cursor.execute("SELECT id, body, timestamp FROM notes WHERE sent = 0")
