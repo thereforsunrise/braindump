@@ -121,6 +121,7 @@ class Braindump(QMainWindow):
         self.email_thread.wait()
         event.accept()
 
+
 def signal_handler(sig, frame):
     logging.info("Exiting gracefully...")
     QApplication.quit()

@@ -27,7 +27,7 @@ class BraindumpDatabase:
             )
             conn.commit()
             return cursor.lastrowid
-    
+
     def get_unsent_notes(self):
         with sqlite3.connect(self.db_file) as conn:
             cursor = conn.cursor()
@@ -44,5 +44,5 @@ class BraindumpDatabase:
                     ",".join("?" for _ in note_ids)
                 ),
                 note_ids,
-            )   
+            )
             conn.commit()
