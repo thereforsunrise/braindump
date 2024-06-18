@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 class BraindumpConfig:
     def __init__(self):
-        config_dir = os.path.join(os.environ["HOME"], "braindump")
+        config_dir = os.path.join(os.environ["HOME"], ".braindump")
 
         if not QDir(config_dir).exists():
             QDir().mkpath(config_dir)

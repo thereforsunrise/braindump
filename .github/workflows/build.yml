@@ -41,7 +41,7 @@ jobs:
             CMD_BUILD: >
               pyinstaller -F -w -n braindump -i icon.png braindump.py &&
               cd dist/ &&
-              zip -r9 braindump braindump
+              zip -r9 braindump braindump.zip
             OUT_FILE_NAME: braindump.zip
             ASSET_MIME: application/zip
           - os: macos-latest
