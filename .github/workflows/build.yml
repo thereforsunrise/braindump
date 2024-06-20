@@ -58,7 +58,7 @@ jobs:
               pyinstaller -F -w -n braindump -i icon.png braindump.py &&
               cd dist/ &&
               Compress-Archive -Path braindump.exe -Destination braindump-windows-${{ github.ref_name }}.zip 
-            OUT_FILE_NAME: braindump-windows-${{ github.ref_name }}
+            OUT_FILE_NAME: braindump-windows-${{ github.ref_name }}.zip
             ASSET_MIME: application/zip
     steps:
     - uses: actions/checkout@v1
