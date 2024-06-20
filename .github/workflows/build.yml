@@ -57,7 +57,7 @@ jobs:
           - os: windows-latest
             TARGET: windows
             CMD_BUILD: >
-              pyinstaller -F -w -n braindump -i icon.png braindump.py
+              pyinstaller -F -w -n braindump -i icon.png braindump.py &&
               cd dist/ &&
               zip -r9 braindump-windows-${{ github.ref_name }}.zip braindump.exe &&
               ls -l
