@@ -11,7 +11,9 @@ class BraindumpConfig:
         config = configparser.ConfigParser()
         config["Interface"] = {
             "font_family": "Monospace",
-            "font_size": "24"
+            "font_size": "24",
+            "background_color": "#282a36",
+            "foreground_color": "white"
         }
         config["Email"] = {
             "sender_email": "your_email@example.com",

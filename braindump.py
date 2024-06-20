@@ -63,10 +63,12 @@ class Braindump(QMainWindow):
 
         font_family = self.config.get('Interface', 'font_family')
         font_size = self.config.getint('Interface', 'font_size')
+        background_color = self.config.get('Interface', 'background_color')
+        foreground_color = self.config.get('Interface', 'foreground_color')
 
         self.textEdit.setFont(QFont(font_family, font_size))
         self.textEdit.setStyleSheet(
-            "QTextEdit { color: white; background-color: #282a36; border: 0px; padding: 20px; }"
+            "QTextEdit { color: %s; background-color: %s; border: 0px; padding: 20px; }" % [foreground_color, background_color]
         )
         self.textEdit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.textEdit.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -76,7 +78,7 @@ class Braindump(QMainWindow):
 
         centralWidget = QWidget(self)
         centralWidget.setLayout(layout)
-        centralWidget.setStyleSheet("background-color: #282a36;")
+        centralWidget.setStyleSheet(f"background-color: {background_color};")
 
         hLayout = QHBoxLayout()
         hLayout.addStretch(1)
@@ -85,7 +87,7 @@ class Braindump(QMainWindow):
 
         mainWidget = QWidget(self)
         mainWidget.setLayout(hLayout)
-        mainWidget.setStyleSheet("background-color: #282a36;")
+        mainWidget.setStyleSheet(f"background-color: {background_color};")
         self.setCentralWidget(mainWidget)
 
         self.showFullScreen()
@@ -138,7 +140,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     app = QApplication(sys.argv)
-    app.setStyleSheet("QMainWindow { background-color: #282a36; }")
     logging.basicConfig(
         filename=BraindumpConfig.log_file(),
         filemode="a",
