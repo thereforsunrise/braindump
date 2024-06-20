@@ -66,7 +66,8 @@ class Braindump(QMainWindow):
 
         self.textEdit.setFont(QFont(font_family, font_size))
         self.textEdit.setStyleSheet(
-            "QTextEdit { color: %s; background-color: %s; border: 0px; padding: 20px; }" % [foreground_color, background_color]
+            "QTextEdit { color: %s; background-color: %s; border: 0px; padding: 20px; }" 
+                % (foreground_color, background_color)
         )
         self.textEdit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.textEdit.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)

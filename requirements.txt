@@ -1,6 +1,7 @@
-configparser
-pillow
-pyinstaller
+PyQt5
 PyQt5-Qt5
 PyQt5-sip
-PyQt5
+configparser
+markdown
+pillow
+pyinstaller

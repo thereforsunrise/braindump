@@ -1,5 +1,5 @@
+import markdown
 import smtplib
-import sqlite3
 
 from PyQt5.QtCore import pyqtSignal, QObject
 
@@ -44,12 +44,15 @@ class BraindumpEmailWorker(QObject):
 
                 for note in notes:
                     note_id, body, timestamp = note
-                    message = MIMEMultipart()
+                    message = MIMEMultipart("alternative")
                     message["From"] = self.sender_email
                     message["To"] = self.receiver_email
                     message["Subject"] = f"{timestamp}"
 
+                    html_body = markdown.markdown(body)
+
                     message.attach(MIMEText(body, "plain"))
+                    message.attach(MIMEText(html_body, "html"))
 
                     server.sendmail(
                         self.sender_email, self.receiver_email, message.as_string()
