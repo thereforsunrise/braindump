@@ -1,9 +1,15 @@
+[Interface]
+background_color =
+font_family =
+font_size =
+foreground_color =
+
 [Email]
-sender_email = 
-receiver_email = 
-smtp_server = smtp.gmail.com
+password =
+receiver_email =
+sender_email =
 smtp_port = 587
-smtp_tls = True
+smtp_server = smtp.gmail.com
 smtp_ssl = False
-username = 
-password = 
+smtp_tls = True
+username =

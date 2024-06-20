@@ -36,13 +36,11 @@ class Braindump(QMainWindow):
         self.email_worker = BraindumpEmailWorker(self.config)
         self.email_thread = QThread()
         self.email_worker.moveToThread(self.email_thread)
-
         self.email_worker.send_error.connect(self.handle_send_error)
         self.email_worker.emails_sent.connect(self.handle_emails_sent)
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.start_email_thread)
-
         interval = self.config.getint("Email", "interval")
         logging.info(f"Email interval set to {interval}")
         self.timer.start(interval)
