@@ -41,22 +41,25 @@ jobs:
             CMD_BUILD: >
               pyinstaller -F -w -n braindump -i icon.png braindump.py &&
               cd dist/ &&
-              zip -r9 braindump braindump
-            OUT_FILE_NAME: braindump.zip
+              zip -r9 braindump-linux-${{ github.ref_name }} braindump
+            OUT_FILE_NAME: braindump-linux-${{ github.ref_name }}.zip
             ASSET_MIME: application/zip
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
                 pyinstaller -F -w -n braindump -i icon.png braindump.py &&
                 cd dist/ &&
-                zip -r9 braindump braindump.app/
-            OUT_FILE_NAME: braindump.zip
+                zip -r9 braindump-osx-${{ github.ref_name }} braindump.app/
+            OUT_FILE_NAME: braindump-osx-${{ github.ref_name }}.zip
             ASSET_MIME: application/zip
           - os: windows-latest
             TARGET: windows
-            CMD_BUILD: pyinstaller -F -w -n braindump -i icon.png braindump.py
-            OUT_FILE_NAME: braindump.exe
-            ASSET_MIME: application/vnd.microsoft.portable-executable
+            CMD_BUILD: >
+              pyinstaller -F -w -n braindump -i icon.png braindump.py
+              cd dist/ &&
+              zip -r9 braindump-windows-${{ github.ref_name }} braindump.exe
+            OUT_FILE_NAME: braindump-windows-${{ github.ref_name }}
+            ASSET_MIME: application/zip
     steps:
     - uses: actions/checkout@v1
     - name: Set up Python 3.12
@@ -86,6 +89,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-        asset_path: ./dist/${{ matrix.OUT_FILE_NAME}}
-        asset_name: ${{ matrix.OUT_FILE_NAME}}
-        asset_content_type: ${{ matrix.ASSET_MIME}}
+        asset_path: ./dist/${{ matrix.OUT_FILE_NAME }}
+        asset_name: ${{ matrix.OUT_FILE_NAME }}
+        asset_content_type: ${{ matrix.ASSET_MIME }}
