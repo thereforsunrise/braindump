@@ -42,7 +42,6 @@ jobs:
               pyinstaller -F -w -n braindump -i icon.png braindump.py &&
               cd dist/ &&
               zip -r9 braindump-linux-${{ github.ref_name }}.zip braindump &&
-              ls -l
             OUT_FILE_NAME: braindump-linux-${{ github.ref_name }}.zip
             ASSET_MIME: application/zip
           - os: macos-latest
@@ -51,7 +50,6 @@ jobs:
               pyinstaller -F -w -n braindump -i icon.png braindump.py &&
               cd dist/ &&
               zip -r9 braindump-osx-${{ github.ref_name }}.zip braindump.app/ &&
-              ls -l 
             OUT_FILE_NAME: braindump-osx-${{ github.ref_name }}.zip
             ASSET_MIME: application/zip
           - os: windows-latest
@@ -59,8 +57,7 @@ jobs:
             CMD_BUILD: >
               pyinstaller -F -w -n braindump -i icon.png braindump.py &&
               cd dist/ &&
-              zip -r9 braindump-windows-${{ github.ref_name }}.zip braindump.exe &&
-              ls -l
+              Compress-Archive -Path braindump.exe -Destination braindump-windows-${{ github.ref_name }}.zip 
             OUT_FILE_NAME: braindump-windows-${{ github.ref_name }}
             ASSET_MIME: application/zip
     steps:
