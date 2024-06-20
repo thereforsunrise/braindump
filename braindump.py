@@ -8,9 +8,7 @@ from PyQt5.QtWidgets import (
     QMainWindow,
     QVBoxLayout,
     QWidget,
-    QHBoxLayout,
-    QSpacerItem,
-    QSizePolicy,
+    QHBoxLayout
 )
 from PyQt5.QtCore import Qt, QTimer, QThread
 from PyQt5.QtGui import QFont
