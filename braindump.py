@@ -45,7 +45,7 @@ class Braindump(QMainWindow):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.start_email_thread)
 
-        interval = self.config.getint("Email", "interval", fallback=30000)
+        interval = self.config.getint("Email", "interval")
         logging.info(f"Email interval set to {interval}")
         self.timer.start(interval)
 
@@ -63,8 +63,8 @@ class Braindump(QMainWindow):
 
         self.textEdit = BraindumpPlainTextEditor(self)
 
-        font_family = self.config.get('Interface', 'font_family', fallback='Monospace')
-        font_size = self.config.get('Interface', 'font_size', fallback=24)
+        font_family = self.config.get('Interface', 'font_family')
+        font_size = self.config.getint('Interface', 'font_size')
 
         self.textEdit.setFont(QFont(font_family, font_size))
         self.textEdit.setStyleSheet(

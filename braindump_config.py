@@ -7,6 +7,27 @@ from PyQt5.QtWidgets import QMessageBox
 
 class BraindumpConfig:
     @staticmethod
+    def defaults():
+        config = configparser.ConfigParser()
+        config["Interface"] = {
+            "font_family": "Monospace",
+            "font_size": "24"
+        }
+        config["Email"] = {
+            "sender_email": "your_email@example.com",
+            "receiver_email": "receiver_email@example.com",
+            "smtp_server": "smtp.example.com",
+            "smtp_port": "587",
+            "smtp_tls": "true",
+            "smtp_ssl": "false",
+            "username": "your_username",
+            "password": "your_password",
+            "interval": "30000"
+        }
+
+        return config
+
+    @staticmethod
     def config_dir():
         return os.path.join(os.environ["HOME"], ".braindump")
 
@@ -27,20 +48,9 @@ class BraindumpConfig:
         if not QDir(BraindumpConfig.config_dir()).exists():
             QDir().mkpath(BraindumpConfig.config_dir())
 
-        config = configparser.ConfigParser()
+        config = BraindumpConfig.defaults()
 
         if not os.path.exists(BraindumpConfig.config_file()):
-            config["Email"] = {
-                "sender_email": "your_email@example.com",
-                "receiver_email": "receiver_email@example.com",
-                "smtp_server": "smtp.example.com",
-                "smtp_port": "587",
-                "smtp_tls": "true",
-                "smtp_ssl": "false",
-                "username": "your_username",
-                "password": "your_password",
-                "interval": "30000"
-            }
             with open(BraindumpConfig.config_file(), "w") as configfile:
                 config.write(configfile)
             QMessageBox.information(
