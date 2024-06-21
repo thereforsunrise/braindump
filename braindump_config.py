@@ -1,4 +1,5 @@
 import configparser
+import platform
 import os
 
 from PyQt5.QtCore import QDir
@@ -31,7 +32,10 @@ class BraindumpConfig:
 
     @staticmethod
     def config_dir():
-        return os.path.join(os.environ["HOME"], ".braindump")
+        if platform.system() == "Windows":
+            return os.path.join(os.environ["USERPROFILE"], ".braindump")
+        else:
+            return os.path.join(os.environ["HOME"], ".braindump")
 
     @staticmethod
     def config_file():
