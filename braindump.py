@@ -94,6 +94,8 @@ class Braindump(QMainWindow):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_S and (event.modifiers() & Qt.ControlModifier):
             self.save_note()
+        elif event.key() == Qt.Key_Q and (event.modifiers() & Qt.ControlModifier):
+            self.close()
 
     def save_note(self):
         body = self.textEdit.toPlainText()

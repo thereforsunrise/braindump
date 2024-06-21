@@ -51,8 +51,8 @@ class BraindumpConfig:
 
     @staticmethod
     def load_config():
-        if not QDir(BraindumpConfig.config_dir()).exists():
-            QDir().mkpath(BraindumpConfig.config_dir())
+        if not os.path.exists(BraindumpConfig.config_dir()):
+            os.makedirs(BraindumpConfig.config_dir())
 
         config = BraindumpConfig.defaults()
 
