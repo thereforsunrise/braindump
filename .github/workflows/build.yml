@@ -72,6 +72,11 @@ jobs:
         pip install -r requirements.txt
     - name: Build with pyinstaller for ${{matrix.TARGET}}
       run: ${{matrix.CMD_BUILD}}
+    - name: Build Windows Installer MSI from exe file
+      if: matrix.TARGET == 'windows'
+      uses: AliceOh/CreateWindowsInstaller@1.0.0
+      with:
+        exefile: 'braindump.exe'
     - name: Load Release URL File from release job
       uses: actions/download-artifact@v1
       with:
