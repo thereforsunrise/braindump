@@ -49,7 +49,7 @@ class BraindumpEmailWorker(QObject):
                     message["To"] = self.receiver_email
                     message["Subject"] = f"{timestamp}"
 
-                    html_body = markdown.markdown(body)
+                    html_body = markdown.markdown(body, extensions=['tables'])
 
                     message.attach(MIMEText(body, "plain"))
                     message.attach(MIMEText(html_body, "html"))
@@ -59,6 +59,6 @@ class BraindumpEmailWorker(QObject):
                     )
                     note_ids.append(note_id)
 
-            self.emails_sent.emit(note_ids)
+                    self.emails_sent.emit(note_ids)
         except Exception as e:
-            self.send_error.emit(str(e), note_ids)
+            self.send_error.emit(str(e))
