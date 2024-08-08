@@ -52,14 +52,6 @@ jobs:
               zip -r9 braindump-osx-${{ github.ref_name }}.zip braindump.app/
             OUT_FILE_NAME: braindump-osx-${{ github.ref_name }}.zip
             ASSET_MIME: application/zip
-          - os: windows-latest
-            TARGET: windows
-            CMD_BUILD: >
-              pyinstaller -F -w -n braindump -i icon.png braindump.py &&
-              cd dist/ &&
-              Compress-Archive -Path braindump.exe -Destination braindump-windows-${{ github.ref_name }}.zip 
-            OUT_FILE_NAME: braindump-windows-${{ github.ref_name }}.zip
-            ASSET_MIME: application/zip
     steps:
     - uses: actions/checkout@v1
     - name: Set up Python 3.12
