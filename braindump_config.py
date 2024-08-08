@@ -25,7 +25,7 @@ class BraindumpConfig:
             "smtp_ssl": "false",
             "username": "your_username",
             "password": "your_password",
-            "interval": "30000"
+            "interval": 30000
         }
 
         return config
