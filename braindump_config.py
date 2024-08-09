@@ -4,17 +4,14 @@ import os
 
 from PyQt5.QtCore import QDir
 from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtGui import QFont, QFontDatabase
 
 
 class BraindumpConfig:
     @staticmethod
     def defaults():
-        font_family = QFontDatabase.systemFont(QFontDatabase.FixedFont).family()
-
         config = configparser.ConfigParser()
         config["Interface"] = {
-            "font_family": font_family,
+            "font_family": "Monospace",
             "font_size": "24",
             "background_color": "#282a36",
             "foreground_color": "white"
@@ -28,7 +25,8 @@ class BraindumpConfig:
             "smtp_ssl": "false",
             "username": "your_username",
             "password": "your_password",
-            "interval": 10000
+            "interval": 30000,
+            "markdown_html_enabled": False
         }
 
         return config

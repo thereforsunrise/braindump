@@ -25,6 +25,7 @@ class BraindumpEmailWorker(QObject):
         self.smtp_ssl = config.getboolean("Email", "smtp_ssl")
         self.username = config.get("Email", "username")
         self.password = config.get("Email", "password")
+        self.markdown_html_enabled = config.getboolean("Email", "markdown_html_enabled")
 
     def send_emails(self, notes):
         try:
@@ -49,10 +50,12 @@ class BraindumpEmailWorker(QObject):
                     message["To"] = self.receiver_email
                     message["Subject"] = f"{timestamp}"
 
-                    html_body = markdown.markdown(body, extensions=['tables'])
 
                     message.attach(MIMEText(body, "plain"))
-                    message.attach(MIMEText(html_body, "html"))
+
+                    if self.markdown_html_enabled:
+                        html_body = markdown.markdown(body, extensions=['tables'])
+                        message.attach(MIMEText(html_body, "html"))
 
                     server.sendmail(
                         self.sender_email, self.receiver_email, message.as_string()
