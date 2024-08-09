@@ -4,14 +4,16 @@ import os
 
 from PyQt5.QtCore import QDir
 from PyQt5.QtWidgets import QMessageBox
-
+from PyQt5.QtGui import QFont, QFontDatabase
 
 class BraindumpConfig:
     @staticmethod
     def defaults():
+        font_family = QFontDatabase.systemFont(QFontDatabase.FixedFont).family()
+
         config = configparser.ConfigParser()
         config["Interface"] = {
-            "font_family": "Monospace",
+            "font_family": font_family,
             "font_size": "24",
             "background_color": "#282a36",
             "foreground_color": "white"
