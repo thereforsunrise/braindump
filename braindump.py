@@ -65,10 +65,9 @@ class Braindump(QMainWindow):
         foreground_color = self.config.get('Interface', 'foreground_color')
 
         self.textEdit.setFont(QFont(font_family, font_size))
-        self.textEdit.setStyleSheet(
-            "QTextEdit { color: %s; background-color: %s; border: 0px; padding: 20px; }" 
-                % (foreground_color, background_color)
-        )
+        self.text_visible = False
+        self.toggle_visibility()
+
         self.textEdit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.textEdit.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
@@ -91,9 +90,28 @@ class Braindump(QMainWindow):
 
         self.showFullScreen()
 
+    def toggle_visibility(self):
+        background_color = self.config.get('Interface', 'background_color')
+        foreground_color = self.config.get('Interface', 'foreground_color')
+
+        self.text_visible = not self.text_visible
+
+        if self.text_visible:
+            self.textEdit.setStyleSheet(
+                "QTextEdit { color: %s; background-color: %s; border: 0px; padding: 20px; }" 
+                    % (foreground_color, background_color)
+            )
+        else:
+            self.textEdit.setStyleSheet(
+                "QTextEdit { color: %s; background-color: %s; border: 0px; padding: 20px; }" 
+                    % (background_color, background_color)
+            )
+
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_S and (event.modifiers() & Qt.ControlModifier):
             self.save_note()
+        elif event.key() == Qt.Key_I and (event.modifiers() & Qt.ControlModifier):
+            self.toggle_visibility()
         elif event.key() == Qt.Key_Q and (event.modifiers() & Qt.ControlModifier):
             self.close()
 
