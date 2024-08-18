@@ -8,7 +8,7 @@ from email.mime.multipart import MIMEMultipart
 
 
 class BraindumpEmailWorker(QObject):
-    send_error = pyqtSignal(str, list)
+    send_error = pyqtSignal(str)
     emails_sent = pyqtSignal(list)
 
     def __init__(self, config):

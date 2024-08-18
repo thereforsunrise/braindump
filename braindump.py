@@ -104,7 +104,7 @@ class Braindump(QMainWindow):
         logging.info(f"Saved note with id {note_id}")
         self.textEdit.clear()
 
-    def handle_send_error(self, error_message, note_ids):
+    def handle_send_error(self, error_message):
         logging.info(f"Problem sending notes {error_message}")
 
     def handle_emails_sent(self, note_ids):
