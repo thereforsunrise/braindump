@@ -50,11 +50,10 @@ class BraindumpEmailWorker(QObject):
                     message["To"] = self.receiver_email
                     message["Subject"] = f"{timestamp}"
 
-
                     message.attach(MIMEText(body, "plain"))
 
                     if self.markdown_html_enabled:
-                        html_body = markdown.markdown(body, extensions=['tables'])
+                        html_body = markdown.markdown(body, extensions=["tables"])
                         message.attach(MIMEText(html_body, "html"))
 
                     server.sendmail(

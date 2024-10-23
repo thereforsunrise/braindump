@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['braindump.py'],
+    ["braindump.py"],
     pathex=[],
     binaries=[],
     datas=[],
@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='braindump',
+    name="braindump",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -35,11 +35,11 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['icon.png'],
+    icon=["icon.png"],
 )
 app = BUNDLE(
     exe,
-    name='braindump.app',
-    icon='icon.png',
+    name="braindump.app",
+    icon="icon.png",
     bundle_identifier=None,
 )

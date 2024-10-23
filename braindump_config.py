@@ -6,6 +6,7 @@ from PyQt5.QtCore import QDir
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtGui import QFont, QFontDatabase
 
+
 class BraindumpConfig:
     @staticmethod
     def defaults():
@@ -16,7 +17,7 @@ class BraindumpConfig:
             "font_family": font_family,
             "font_size": "24",
             "background_color": "#282a36",
-            "foreground_color": "white"
+            "foreground_color": "white",
         }
         config["Email"] = {
             "sender_email": "your_email@example.com",
@@ -28,7 +29,7 @@ class BraindumpConfig:
             "username": "your_username",
             "password": "your_password",
             "interval": 30000,
-            "markdown_html_enabled": False
+            "markdown_html_enabled": False,
         }
 
         return config

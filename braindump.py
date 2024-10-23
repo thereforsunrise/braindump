@@ -3,13 +3,7 @@ import logging
 import sys
 import signal
 
-from PyQt5.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QVBoxLayout,
-    QWidget,
-    QHBoxLayout
-)
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 from PyQt5.QtCore import Qt, QTimer, QThread
 from PyQt5.QtGui import QFont
 
@@ -59,10 +53,10 @@ class Braindump(QMainWindow):
 
         self.textEdit = BraindumpPlainTextEditor(self)
 
-        font_family = self.config.get('Interface', 'font_family')
-        font_size = self.config.getint('Interface', 'font_size')
-        background_color = self.config.get('Interface', 'background_color')
-        foreground_color = self.config.get('Interface', 'foreground_color')
+        font_family = self.config.get("Interface", "font_family")
+        font_size = self.config.getint("Interface", "font_size")
+        background_color = self.config.get("Interface", "background_color")
+        foreground_color = self.config.get("Interface", "foreground_color")
 
         self.textEdit.setFont(QFont(font_family, font_size))
         self.text_visible = False
@@ -91,20 +85,20 @@ class Braindump(QMainWindow):
         self.showFullScreen()
 
     def toggle_visibility(self):
-        background_color = self.config.get('Interface', 'background_color')
-        foreground_color = self.config.get('Interface', 'foreground_color')
+        background_color = self.config.get("Interface", "background_color")
+        foreground_color = self.config.get("Interface", "foreground_color")
 
         self.text_visible = not self.text_visible
 
         if self.text_visible:
             self.textEdit.setStyleSheet(
-                "QTextEdit { color: %s; background-color: %s; border: 0px; padding: 20px; }" 
-                    % (foreground_color, background_color)
+                "QTextEdit { color: %s; background-color: %s; border: 0px; padding: 20px; }"
+                % (foreground_color, background_color)
             )
         else:
             self.textEdit.setStyleSheet(
-                "QTextEdit { color: %s; background-color: %s; border: 0px; padding: 20px; }" 
-                    % (background_color, background_color)
+                "QTextEdit { color: %s; background-color: %s; border: 0px; padding: 20px; }"
+                % (background_color, background_color)
             )
 
     def keyPressEvent(self, event):
@@ -146,11 +140,11 @@ def signal_handler(sig, frame):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Braindump CLI")
     parser.add_argument(
-        '--log-level',
+        "--log-level",
         type=str,
-        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
-        default='INFO',
-        help='Set the logging level'
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        default="INFO",
+        help="Set the logging level",
     )
     args = parser.parse_args()
 

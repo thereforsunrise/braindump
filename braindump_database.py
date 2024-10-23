@@ -31,9 +31,7 @@ class BraindumpDatabase:
     def get_unsent_notes(self):
         with sqlite3.connect(self.db_file) as conn:
             cursor = conn.cursor()
-            cursor.execute(
-                "SELECT id, body, timestamp FROM notes WHERE sent = 0"
-            )
+            cursor.execute("SELECT id, body, timestamp FROM notes WHERE sent = 0")
             return cursor.fetchall()
 
     def mark_notes_as_sent(self, note_ids):

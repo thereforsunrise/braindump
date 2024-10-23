@@ -1,7 +1,8 @@
 PyQt5
-PyQt5-Qt5
-PyQt5-sip
+PyQt5 - Qt5
+PyQt5 - sip
 configparser
 markdown
 pillow
 pyinstaller
+black
